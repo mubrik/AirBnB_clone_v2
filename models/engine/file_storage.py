@@ -60,6 +60,8 @@ class FileStorage:
     def delete(self, obj=None):
         """Deletes object from list"""
         from models.base_model import BaseModel
-        if isinstance(obj, BaseModel):
-            key = f'{obj.to_dict()["__class__"]}.{obj.id}'
+        if obj is None or not isinstance(obj, BaseModel):
+            return
+        key = f'{obj.to_dict()["__class__"]}.{obj.id}'
+        if key in self.all():
             del FileStorage.__objects[key]

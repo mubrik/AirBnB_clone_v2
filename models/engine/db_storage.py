@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """This module defines a class to manage db storage for hbnb clone"""
 from os import environ as env
-from sqlalchemy import create_engine, select, union_all
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 
