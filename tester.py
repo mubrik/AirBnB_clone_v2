@@ -3,14 +3,15 @@
 """
 from models.engine.file_storage import FileStorage
 from models.state import State
+from models.city import City
 
 fs = FileStorage()
 
-# All States
-all_states = fs.all(State)
-print("All States: {}".format(len(all_states.keys())))
-for state_key in all_states.keys():
-    print(all_states[state_key])
+# All Items
+all_items = fs.all()
+print("All Items: {}".format(len(all_items.keys())))
+for state_key in all_items.keys():
+    print(all_items[state_key])
 
 # Create a new State
 new_state = State()
@@ -19,12 +20,6 @@ fs.new(new_state)
 fs.save()
 print("New State: {}".format(new_state))
 
-# All States
-all_states = fs.all(State)
-print("All States: {}".format(len(all_states.keys())))
-for state_key in all_states.keys():
-    print(all_states[state_key])
-
 # Create another State
 another_state = State()
 another_state.name = "Nevada"
@@ -32,17 +27,31 @@ fs.new(another_state)
 fs.save()
 print("Another State: {}".format(another_state))
 
-# All States
-all_states = fs.all(State)
-print("All States: {}".format(len(all_states.keys())))
-for state_key in all_states.keys():
-    print(all_states[state_key])        
+# Create a City
+new_city = City()
+new_city.name = "Ikeja"
+fs.new(new_city)
+fs.save()
+print("New City: {}".format(new_city))
 
+# All Items
+all_items = fs.all()
+print("All Items: {}".format(len(all_items.keys())))
+for state_key in all_items.keys():
+    print(all_items[state_key])
+
+# All State
+all_items = fs.all(State)
+print("All State: {}".format(len(all_items.keys())))
+for state_key in all_items.keys():
+    print(all_items[state_key])
+
+# All City
+all_items = fs.all(City)
+print("All City: {}".format(len(all_items.keys())))
+for state_key in all_items.keys():
+    print(all_items[state_key])
+
+"""
 # Delete the new State
-fs.delete(new_state)
-
-# All States
-all_states = fs.all(State)
-print("All States: {}".format(len(all_states.keys())))
-for state_key in all_states.keys():
-    print(all_states[state_key])
+fs.delete(new_state) """

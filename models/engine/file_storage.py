@@ -13,10 +13,9 @@ class FileStorage:
         if cls is None:
             return FileStorage.__objects
         from exports import valid_classes
-        if cls in valid_classes:
+        if cls in valid_classes.values():
             return {
-                x for x in FileStorage.__objects
-                if x.to_dict()['__class__'] == cls
+                k: v for k, v in self.all().items() if type(v) == cls
             }
         # raise?
         return FileStorage.__objects
