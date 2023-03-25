@@ -64,5 +64,4 @@ class FileStorage:
         if obj is None or not isinstance(obj, BaseModel):
             return
         key = f'{obj.to_dict()["__class__"]}.{obj.id}'
-        if key in self.all():
-            del self.all()[key]
+        del FileStorage.__objects[key]
