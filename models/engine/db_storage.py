@@ -28,14 +28,19 @@ class DBStorage:
         objs = {}
         if cls is None:
             # change to loop to simplify later
-            for city in self.__session.query(valid_classes['City']).all():
-                key = f'City.{city.id}'
-                value = city
-                objs[key] = value
-            for state in self.__session.query(valid_classes['State']).all():
-                key = f'State.{state.id}'
-                value = state
-                objs[key] = value
+            for key, val in valid_classes.items():
+                # skip amenities for now
+                if key not in ['BaseModel', 'Amenity']:
+                    for model in self.__session.query(val).all():
+                        key = f'{key}.{model.id}'
+                        value = model
+                        objs[key] = value
+        else:
+            if cls.__name__ in valid_classes:
+                for model in self.__session.query(val).all():
+                    key = f'{cls.__name__}.{model.id}'
+                    value = model
+                    objs[key] = value
         return objs
 
     def new(self, obj):
