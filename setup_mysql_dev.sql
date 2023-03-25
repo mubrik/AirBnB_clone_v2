@@ -1,5 +1,3 @@
--- password policy
-SET GLOBAL validate_password.policy=LOW;
 -- Create database
 CREATE DATABASE IF NOT EXISTS hbnb_dev_db;
 -- Create user and grant privileges
