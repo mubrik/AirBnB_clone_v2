@@ -29,14 +29,14 @@ class DBStorage:
         if cls is None:
             # change to loop to simplify later
             for key, val in valid_classes.items():
-                # skip amenities for now
-                if key not in ['BaseModel', 'Amenity']:
+                if key not in ['BaseModel']:
                     for model in self.__session.query(val).all():
                         key = f'{key}.{model.id}'
                         value = model
                         objs[key] = value
         else:
             if cls.__name__ in valid_classes:
+                val = valid_classes[cls.__name__]
                 for model in self.__session.query(val).all():
                     key = f'{cls.__name__}.{model.id}'
                     value = model
