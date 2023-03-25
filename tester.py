@@ -1,46 +1,70 @@
 #!/usr/bin/env python3
-""" Test link Many-To-Many Place <> Amenity
+""" Test delete feature
 """
-from exports import valid_classes
-from models import storage
+from models.engine.file_storage import FileStorage
+from models.state import State
+from models.city import City
 
-storage.reload()
+fs = FileStorage()
 
-# creation of a State
-state = valid_classes['State'](name="California")
-state.save()
+# All Items
+all_items = fs.all()
+print("All Items: {}".format(len(all_items.keys())))
+for state_key in all_items.keys():
+    print(all_items[state_key])
 
-# creation of a City
-city = valid_classes['City'](state_id=state.id, name="San Francisco")
-city.save()
+# Create a new State
+new_state = State()
+new_state.name = "California"
+fs.new(new_state)
+fs.save()
+print("New State: {}".format(new_state))
 
-# creation of a User
-user = valid_classes['User'](email="john@snow.com", password="johnpwd")
-user.save()
+# Create another State
+another_state = State()
+another_state.name = "Nevada"
+fs.new(another_state)
+fs.save()
+print("Another State: {}".format(another_state))
 
-# creation of 2 Places
-place_1 = valid_classes['Place'](user_id=user.id, city_id=city.id, name="House 1")
-place_1.save()
-place_2 = valid_classes['Place'](user_id=user.id, city_id=city.id, name="House 2")
-place_2.save()
+# Create a City
+new_city = City()
+new_city.name = "Ikeja"
+fs.new(new_city)
+fs.save()
+print("New City: {}".format(new_city))
 
-# creation of 3 various Amenity
-amenity_1 = valid_classes['Amenity'](name="Wifi")
-amenity_1.save()
-amenity_2 = valid_classes['Amenity'](name="Cable")
-amenity_2.save()
-amenity_3 = valid_classes['Amenity'](name="Oven")
-amenity_3.save()
+# All Items
+all_items = fs.all()
+print("All Items: {}".format(len(all_items.keys())))
+for state_key in all_items.keys():
+    print(all_items[state_key])
 
-# link place_1 with 2 amenities
-place_1.amenities.append(amenity_1)
-place_1.amenities.append(amenity_2)
+# Delete the new State
+fs.delete(new_state)
 
-# link place_2 with 3 amenities
-place_2.amenities.append(amenity_1)
-place_2.amenities.append(amenity_2)
-place_2.amenities.append(amenity_3)
+# All Items
+all_items = fs.all()
+print("All Items: {}".format(len(all_items.keys())))
+for state_key in all_items.keys():
+    print(all_items[state_key])
 
-storage.save()
+# Delete the new City
+fs.delete(new_city)
 
-print("OK")
+# All Items
+all_items = fs.all()
+print("All Items: {}".format(len(all_items.keys())))
+for state_key in all_items.keys():
+    print(all_items[state_key])
+
+# Delete the new State
+fs.delete(another_state)
+
+# All Items
+all_items = fs.all()
+print("All Items: {}".format(len(all_items.keys())))
+for state_key in all_items.keys():
+    print(all_items[state_key])
+
+fs.save()

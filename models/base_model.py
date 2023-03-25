@@ -19,7 +19,7 @@ class BaseModel:
         self.id = str(uuid.uuid4())
         now = datetime.now()
         self.created_at = now
-        self.updated_at = now.replace(microsecond=0)
+        self.updated_at = now
         date_f = '%Y-%m-%dT%H:%M:%S.%f'
         ignore = {'__class__', 'created_at', 'updated_at'}
         attrs = {k: v for k, v in kwargs.items() if k not in ignore}
@@ -29,12 +29,14 @@ class BaseModel:
             self.created_at = datetime.strptime(kwargs['created_at'], date_f)
         if 'updated_at' in kwargs:
             self.updated_at = datetime.strptime(
-                kwargs['updated_at'], date_f).replace(microsecond=0)
+                kwargs['updated_at'], date_f)
 
     def __str__(self):
         """Returns a string representation of the instance"""
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.to_dict())
+        return '[{}] ({}) {}'.format(
+            cls, self.id, {
+                k: v for k, v in self.to_dict().items() if k != '__class__'})
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
