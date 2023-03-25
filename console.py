@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] == '{' and pline[-1] == '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -113,18 +113,24 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args):
+    def do_create(self, args: str):
         """ Create an object of any class"""
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        arg_list = args.split()
+        if arg_list[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+        arg_param = self._param_list_to_dict(arg_list[1:])
+        new_instance = HBNBCommand.classes[arg_list[0]]()
+        ignore = ('__class__', 'created_at', 'updated_at')
+        for attr, value in arg_param.items():
+            if attr not in ignore:
+                setattr(new_instance, attr, value)
         storage.save()
         print(new_instance.id)
-        storage.save()
+        return
 
     def help_create(self):
         """ Help information for the create method """
@@ -187,7 +193,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del storage.all()[key]
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -272,7 +278,7 @@ class HBNBCommand(cmd.Cmd):
                 args.append(v)
         else:  # isolate args
             args = args[2]
-            if args and args[0] is '\"':  # check for quoted arg
+            if args and args[0] == '\"':  # check for quoted arg
                 second_quote = args.find('\"', 1)
                 att_name = args[1:second_quote]
                 args = args[second_quote + 1:]
@@ -280,10 +286,10 @@ class HBNBCommand(cmd.Cmd):
             args = args.partition(' ')
 
             # if att_name was not quoted arg
-            if not att_name and args[0] is not ' ':
+            if not att_name and args[0] != ' ':
                 att_name = args[0]
             # check for quoted val arg
-            if args[2] and args[2][0] is '\"':
+            if args[2] and args[2][0] == '\"':
                 att_val = args[2][1:args[2].find('\"', 1)]
 
             # if att_val was not quoted arg
@@ -319,6 +325,43 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
+    def _get_update_str(self, line: str):
+        """Return the right string to use as value for the update command"""
+        print(line)
+        if line[0] == '"' and line[-1] == '"':
+            return line[1:-1]
+        if line[0] == "'" and line[-1] == "'":
+            return line[1:-1]
+        return None
+
+    def _param_list_to_dict(self, param_list: 'list[str]'):
+        result = {}
+        # validate
+        if not all(map(lambda x: isinstance(x, str), param_list)):
+            # maybe raise?
+            return result
+        for param in param_list:
+            if '=' not in param:
+                continue
+            key_val = param.split('=')
+            if len(key_val) != 2 or not all(key_val):
+                continue
+            key, val = key_val
+            value = None
+            try:
+                value = float(val) if "." in val else int(val)
+            except ValueError as e:
+                # string. validate
+                value = self._get_update_str(val)
+                if value is None:
+                    continue
+            if isinstance(value, str):
+                value = value.replace('_', ' ')
+                value = value.replace('"', '\"')
+            result[key] = value
+        return result
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
