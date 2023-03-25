@@ -65,9 +65,9 @@ class DBStorage:
         """ creates the tables and session """
         from models.base_model import Base
 
-        Base.metadata.create_all(self.__engine)
         if env.get('HBNB_ENV', '') == 'test':
-            Base.metadata.drop_all()
+            Base.metadata.drop_all(self.__engine)
+        Base.metadata.create_all(self.__engine)
         Session = scoped_session(sessionmaker(bind=self.__engine,
                                               expire_on_commit=False))
         self.__session = Session()
