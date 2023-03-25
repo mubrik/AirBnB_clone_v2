@@ -1,15 +1,15 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """ Console Module """
 import cmd
 import sys
 from models.base_model import BaseModel
-from models.__init__ import storage
 from models.user import User
 from models.place import Place
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+from models.__init__ import storage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -128,7 +128,7 @@ class HBNBCommand(cmd.Cmd):
         for attr, value in arg_param.items():
             if attr not in ignore:
                 setattr(new_instance, attr, value)
-        storage.save()
+        new_instance.save()
         print(new_instance.id)
         return
 
@@ -212,11 +212,11 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all().items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all().items():
                 print_list.append(str(v))
 
         print(print_list)
@@ -336,6 +336,7 @@ class HBNBCommand(cmd.Cmd):
         return None
 
     def _param_list_to_dict(self, param_list: 'list[str]'):
+        """ helper to convert param list to obj"""
         result = {}
         # validate
         if not all(map(lambda x: isinstance(x, str), param_list)):
