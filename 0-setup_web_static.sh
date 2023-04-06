@@ -9,7 +9,7 @@ sudo mkdir -p /data/web_static/releases/ /data/web_static/shared/ /data/web_stat
 # Set ownership of /data folder recursively to ubuntu
 sudo chown -R ubuntu:ubuntu /data
 # template html
-echo "Hello World" > /data/web_static/releases/test/index.html
+echo "<html><head></head><body>Holberton School</body></html>" > /data/web_static/releases/test/index.html
 # Delete the symbolic link if it already exists
 if [ -L /data/web_static/current ]; then
   rm /data/web_static/current
