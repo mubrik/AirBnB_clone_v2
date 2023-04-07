@@ -6,7 +6,7 @@ sudo apt-get install nginx -qq --force-yes &> /dev/null
 # create dirs
 sudo mkdir -p /data/web_static/releases/ /data/web_static/shared/ /data/web_static/releases/test/
 # Set ownership of /data folder recursively to ubuntu
-sudo chown -R "$USER":"$USER" /data
+sudo chown -R ubuntu:ubuntu /data
 # template html
 echo "<html>
 <head></head>
@@ -35,4 +35,4 @@ fi
 # restart
 sudo service nginx restart > /dev/null
 # test
-# echo $? && ls -l /data && ls -l /data/web_static && ls /data/web_static/current && echo "cating" && cat /data/web_static/current/index.html && echo "curling" && curl localhost/hbnb_static/index.html
+echo $? && ls -l /data && ls -l /data/web_static && ls /data/web_static/current && echo "cating" && cat /data/web_static/current/index.html && echo "curling" && curl localhost/hbnb_static/index.html
