@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # setup airbnb on a ubuntu 14.04 server
 # install nginx
-sudo apt-get update
-sudo apt-get install nginx -y
+sudo apt-get update &> /dev/null
+sudo apt-get install nginx -qq --force-yes &> /dev/null
 # create dirs
 sudo mkdir -p /data/web_static/releases/ /data/web_static/shared/ /data/web_static/releases/test/
 # Set ownership of /data folder recursively to ubuntu
@@ -20,15 +20,19 @@ if [ -L /data/web_static/current ]; then
 fi
 # Create symbolic link
 ln -s /data/web_static/releases/test /data/web_static/current
-# backup
-# sudo cp /etc/nginx/sites-enabled/default /default.bak
+# create backup
+sudo cp /etc/nginx/sites-enabled/default /default.bak
+# change root html location
+sudo sed -i "s+root .*html;+root /var/www/html;+" /etc/nginx/sites-enabled/default
 # add location to nginx
 if grep -q "location /hbnb_static {" /etc/nginx/sites-enabled/default; then
   :
 else
-  sudo sed -i "s+listen \[::\]:80.*default_server;+&\n\tlocation /hbnb_static {\n\t\talias /data/web_static/current/;\n\t\tindex index.html;\n\t\terror_page 404 /404.html;\n\t}+" /etc/nginx/sites-enabled/default
+  sudo sed -i "s+listen.*default_server;+&\n\tlocation /hbnb_static {\n\t\talias /data/web_static/current/;\n\t\tindex index.html;\n\t\terror_page 404 /404.html;\n\t}+" /etc/nginx/sites-enabled/default
 fi
 # verify nginx conf
 # sudo nginx -t
 # restart
-sudo service nginx restart
+sudo service nginx restart > /dev/null
+# test
+# echo $? && ls -l /data && ls -l /data/web_static && ls /data/web_static/current && echo "cating" && cat /data/web_static/current/index.html && echo "curling" && curl localhost/hbnb_static/index.html
