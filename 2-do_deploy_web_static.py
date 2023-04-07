@@ -6,6 +6,7 @@ import os
 
 env.hosts = ['54.90.41.154', '52.91.160.206']
 env.user = 'ubuntu'
+env.key_filename = '~/.ssh/alx'
 
 
 def do_pack():
@@ -50,6 +51,7 @@ def do_deploy(archive_path):
         run("sudo rm -f /data/web_static/current")
         # Create a new symbolic link
         run("sudo ln -s {} /data/web_static/current".format(folder_name))
+        print("New version deployed!")
         return True
     except Exception as exc:
         return False
