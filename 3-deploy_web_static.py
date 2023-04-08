@@ -30,12 +30,12 @@ def do_pack():
 
 def do_deploy(archive_path):
     """
-    archive to the web servers
+    Distributes an archive to the web servers and sets up the symbolic links
     """
     if not os.path.exists(archive_path):
         return False
     try:
-        # Upload the archive to the /tmp/
+        # Upload archive to the /tmp/
         put(archive_path, "/tmp/")
         # Uncompress
         filename = os.path.basename(archive_path)
@@ -48,9 +48,9 @@ def do_deploy(archive_path):
         # Delete the archive from server
         run("rm /tmp/{}".format(filename))
         # Delete the symbolic link
-        run("sudo rm -f /data/web_static/current")
+        run("rm -f /data/web_static/current")
         # Create a new symbolic link
-        run("sudo ln -s {} /data/web_static/current".format(folder_name))
+        run("ln -s {} /data/web_static/current".format(folder_name))
         print("New version deployed!")
         return True
     except Exception as exc:
