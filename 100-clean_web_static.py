@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ do dsome packing"""
-from fabric.api import env, put, run, local, cd
+from fabric.api import env, put, run, local, cd, lcd
 from datetime import datetime
 import os
 
@@ -71,10 +71,9 @@ def do_clean(number=0):
     """
     Deletes stuff
     """
-    if number == 0 or number == 1:
+    number = int(number)
+    if not number or number == 1:
         number = 1
-    else:
-        number = int(number)
 
     with cd("/data/web_static/releases"):
         archives = run("ls -1tr").split("\n")
@@ -83,9 +82,22 @@ def do_clean(number=0):
             if archives[i].startswith("web_static_"):
                 run("rm -f {}".format(archives[i]))
 
-    with cd("/versions"):
-        archives = local("ls -1tr", capture=True).split("\n")
+    archives = local("ls -1tr versions", capture=True).split("\n")
+    for i in range(len(archives) - number):
+        if archives[i].startswith("web_static_"):
+            local("rm -f {}".format(archives[i]))
 
-        for i in range(len(archives) - number):
-            if archives[i].startswith("web_static_"):
-                local("rm -f {}".format(archives[i]))
+
+def do_cleaan(number=0):
+    """
+    Deletes stuff
+    """
+    number = int(number)
+    if not number or number == 1:
+        number = 1
+
+    archives = local("ls -1tr testerss", capture=True).split("\n")
+    for i in range(len(archives) - number):
+        if archives[i].startswith("web_static_"):
+            print(archives[i])
+            """ local("rm -f {}".format(archives[i])) """
