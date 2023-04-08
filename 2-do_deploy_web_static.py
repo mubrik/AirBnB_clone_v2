@@ -11,10 +11,10 @@ env.key_filename = '~/.ssh/alx'
 
 def do_pack():
     """
-    Generates a .tgz archive from the contents of the web_static
+    packs archive
     """
     try:
-        # create the versions directory if it doesn't exist
+        # create
         if not os.path.exists("versions"):
             local("mkdir versions")
         # create the archive filename
@@ -30,29 +30,29 @@ def do_pack():
 
 def do_deploy(archive_path):
     """
-    Distributes an archive to the web servers and sets up the symbolic links
+    deploys archive
     """
     if not os.path.exists(archive_path):
         return False
+
     try:
-        # Upload archive to the /tmp/
+        archive_name = os.path.basename(archive_path)
+        archive_root = os.path.splitext(archive_name)[0]
+        releases_path = "/data/web_static/releases/{}/".format(archive_root)
+
+        # Upload archive
         put(archive_path, "/tmp/")
-        # Uncompress
-        filename = os.path.basename(archive_path)
-        file_ext = os.path.splitext(filename)[0]
-        folder_name = "/data/web_static/releases/" + file_ext
-        run("mkdir -p {}".format(folder_name))
-        run(
-            "tar -xzf /tmp/{} -C {} --strip-components=1".format(
-                filename, folder_name))
-        # Delete the archive from server
-        run("rm /tmp/{}".format(filename))
-        # Delete the symbolic link
-        run("rm -f /data/web_static/current")
-        # Create a new symbolic link
-        run("ln -s {} /data/web_static/current".format(folder_name))
+        run("mkdir -p {}".format(releases_path))
+        run("tar -xzf /tmp/{} -C {}".format(archive_name, releases_path))
+        run("rm /tmp/{}".format(archive_name))
+        run("mv {}web_static/* {}".format(releases_path, releases_path))
+        run("rm -rf {}web_static".format(releases_path))
+
+        # Update symlink
+        run("rm -rf /data/web_static/current")
+        run("ln -s {} /data/web_static/current".format(releases_path))
+
         print("New version deployed!")
         return True
     except Exception as exc:
-        print(exc)
         return False
