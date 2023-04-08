@@ -4,8 +4,8 @@ from fabric.api import env, put, run, local
 from datetime import datetime
 import os
 
-env.hosts = ['54.90.41.154', '52.91.160.206']
-env.user = 'ubuntu'
+env.hosts = ['localhost']
+env.user = 'mubrik'
 env.key_filename = '~/.ssh/alx'
 
 
@@ -54,4 +54,5 @@ def do_deploy(archive_path):
         print("New version deployed!")
         return True
     except Exception as exc:
+        print(exc)
         return False
