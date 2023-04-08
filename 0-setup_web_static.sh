@@ -7,7 +7,7 @@ fi
 # create dirs
 sudo mkdir -p /data/web_static/releases/ /data/web_static/shared/ /data/web_static/releases/test/
 # Set ownership of /data folder recursively to ubuntu
-sudo chown -R ubuntu:ubuntu /data/
+sudo chown -hR ubuntu:ubuntu /data/
 # template html
 echo "<html>
 <head></head>
