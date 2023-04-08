@@ -15,12 +15,8 @@ echo "<html>
 <div>Holberton School</div>
 </body>
 </html>" > /data/web_static/releases/test/index.html
-# Delete the symbolic link if it already exists
-if [ -L /data/web_static/current ]; then
-  rm /data/web_static/current
-fi
 # Create symbolic link
-ln -s /data/web_static/releases/test/ /data/web_static/current
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 # create backup
 # sudo cp /etc/nginx/sites-enabled/default /default.bak
 # change root html location
