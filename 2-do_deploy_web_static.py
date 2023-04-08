@@ -6,7 +6,7 @@ import os
 
 env.hosts = ['54.90.41.154', '52.91.160.206']
 env.user = 'ubuntu'
-env.key_filename = '~/.ssh/alx'
+env.key_filename = '~/.ssh/id_rsa'
 
 
 def do_pack():
@@ -35,7 +35,7 @@ def do_deploy(archive_path):
     if not os.path.exists(archive_path):
         return False
     try:
-        # Upload the archive to the /tmp/
+        # Upload archive to the /tmp/
         put(archive_path, "/tmp/")
         # Uncompress
         filename = os.path.basename(archive_path)
