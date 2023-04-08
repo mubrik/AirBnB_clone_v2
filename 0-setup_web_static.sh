@@ -9,12 +9,7 @@ sudo mkdir -p /data/web_static/releases/ /data/web_static/shared/ /data/web_stat
 # Set ownership of /data folder recursively to ubuntu
 sudo chown -hR ubuntu:ubuntu /data/
 # template html
-echo "<html>
-<head></head>
-<body style='display: flex; height:100vh; width: 100vw; justify-content: center; align-items: center;'>
-<div>Holberton School</div>
-</body>
-</html>" > /data/web_static/releases/test/index.html
+echo "<html><head><title>Test HTML File</title></head><body><h1>This is a test.</h1></body></html>" | sudo tee /data/web_static/releases/test/index.html &>/dev/null
 # Create symbolic link
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 # change root html location
@@ -25,5 +20,3 @@ sudo sed -i '0,/^\(\s*\)server_name mb.tech www.mb.tech;$/s//&\n\n\1location \/h
 # Restart Nginx
 sudo service nginx stop &>/dev/null
 sudo service nginx start &>/dev/null
-# test
-# echo $? && ls -l /data && ls -l /data/web_static && ls /data/web_static/current && echo "cating" && cat /data/web_static/current/index.html && echo "curling" && curl localhost/hbnb_static/index.html
