@@ -71,7 +71,7 @@ def do_clean(number=0):
     """
     Deletes stuff
     """
-    number = int(number)
+    """ number = int(number)
     if not number or number == 1:
         number = 1
 
@@ -85,7 +85,7 @@ def do_clean(number=0):
     archives = local("ls -1tr versions", capture=True).split("\n")
     for i in range(len(archives) - number):
         if archives[i].startswith("web_static_"):
-            local("rm -f {}".format(archives[i]))
+            local("rm -f {}".format(archives[i])) """
 
 
 def do_cleaan(number=0):
