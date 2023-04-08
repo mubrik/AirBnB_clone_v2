@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # setup airbnb on a ubuntu 14.04 server
-if ! command -v nginx &> /dev/null; then
-  sudo apt-get update &> /dev/null
-  sudo apt-get install nginx -y &> /dev/null
+if [ ! -x "$(command -v nginx)" ]; then
+  sudo service "$(sudo lsof -i :80 | grep LISTEN | awk '{print $1}' | head -n 1)" stop &/dev/null;
+  sudo apt-get update
+  sudo apt-get install -y nginx
 fi
 # create dirs
 sudo mkdir -p /data/web_static/releases/ /data/web_static/shared/ /data/web_static/releases/test/
