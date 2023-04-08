@@ -32,27 +32,21 @@ def do_deploy(archive_path):
     """
     deploys archive
     """
+    archive_name = os.path.basename(archive_path).split(".")[0]
     if not os.path.exists(archive_path):
         return False
 
-    try:
-        archive_name = os.path.basename(archive_path)
-        archive_root = os.path.splitext(archive_name)[0]
-        releases_path = "/data/web_static/releases/{}/".format(archive_root)
+    temp_archive, = put(local_path=archive_path, remote_path="/tmp")
+    folder_name = "/data/web_static/releases/{}".format(archive_name)
+    r1 = run("mkdir -p {}".format(folder_name))
+    r2 = run("tar -xzf {} -C {}".format(temp_archive, folder_name))
+    r6 = run("rm {}".format(temp_archive))
+    r3 = run("mv {}/web_static/* {}".format(folder_name, folder_name))
+    r4 = run("rm -rf {}/web_static".format(folder_name))
+    r5 = run("rm -r  /data/web_static/current".format(folder_name))
+    r7 = run("ln -s {} /data/web_static/current".format(folder_name))
 
-        # Upload archive
-        put(archive_path, "/tmp/")
-        run("mkdir -p {}".format(releases_path))
-        run("tar -xzf /tmp/{} -C {}".format(archive_name, releases_path))
-        run("rm /tmp/{}".format(archive_name))
-        run("mv {}web_static/* {}".format(releases_path, releases_path))
-        run("rm -rf {}web_static".format(releases_path))
-
-        # Update symlink
-        run("rm -rf /data/web_static/current")
-        run("ln -s {} /data/web_static/current".format(releases_path))
-
-        print("New version deployed!")
-        return True
-    except Exception as exc:
+    if r1.failed and r2.failed and r3.failed and r4.failed and r5.failed \
+            and r6.failed and r7.failed:
         return False
+    return True
