@@ -17,16 +17,10 @@ echo "<html>
 </html>" > /data/web_static/releases/test/index.html
 # Create symbolic link
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
-# create backup
-# sudo cp /etc/nginx/sites-enabled/default /default.bak
 # change root html location
-sudo sed -i "s+root .*html;+root /var/www/html;+" /etc/nginx/sites-enabled/default
-# add location to nginx
-if grep -q "location /hbnb_static {" /etc/nginx/sites-enabled/default; then
-  :
-else
-  sudo sed -i "s+listen.*default_server;+&\n\tlocation /hbnb_static {\n\t\talias /data/web_static/current/;\n\t\tindex index.html;\n\t\terror_page 404 /404.html;\n\t}+" /etc/nginx/sites-enabled/default
-fi
+# Configure Nginx to serve content from the current release
+sudo sed -i '0,/^\(\s*\)server_name\s*.*$/s//\1server_name mb.tech www.mb.tech;/' /etc/nginx/sites-available/default
+sudo sed -i '0,/^\(\s*\)server_name mb.tech www.mb.tech;$/s//&\n\n\1location \/hbnb_static {\n\1\1alias \/data\/web_static\/current\/;\n\1\1autoindex off;\n\1}/' /etc/nginx/sites-available/default
 # verify nginx conf
 # Restart Nginx
 sudo service nginx restart &>/dev/null
