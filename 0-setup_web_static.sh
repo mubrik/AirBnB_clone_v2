@@ -23,6 +23,7 @@ sudo sed -i '0,/^\(\s*\)server_name\s*.*$/s//\1server_name mb.tech www.mb.tech;/
 sudo sed -i '0,/^\(\s*\)server_name mb.tech www.mb.tech;$/s//&\n\n\1location \/hbnb_static {\n\1\1alias \/data\/web_static\/current\/;\n\1\1autoindex off;\n\1}/' /etc/nginx/sites-available/default
 # verify nginx conf
 # Restart Nginx
-sudo service nginx restart &>/dev/null
+sudo service nginx stop &>/dev/null
+sudo service nginx start &>/dev/null
 # test
 # echo $? && ls -l /data && ls -l /data/web_static && ls /data/web_static/current && echo "cating" && cat /data/web_static/current/index.html && echo "curling" && curl localhost/hbnb_static/index.html
