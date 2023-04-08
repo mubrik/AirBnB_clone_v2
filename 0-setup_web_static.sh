@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # setup airbnb on a ubuntu 14.04 server
-# install nginx
-sudo apt-get update &> /dev/null
-sudo apt-get install nginx -y &> /dev/null
+if ! command -v nginx &> /dev/null; then
+  sudo apt-get update &> /dev/null
+  sudo apt-get install nginx -y &> /dev/null
+fi
 # create dirs
 sudo mkdir -p /data/web_static/releases/ /data/web_static/shared/ /data/web_static/releases/test/
 # Set ownership of /data folder recursively to ubuntu
