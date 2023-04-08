@@ -23,7 +23,7 @@ sudo sed -i "s+root .*html;+root /var/www/html;+" /etc/nginx/sites-enabled/defau
 if grep -q "location /hbnb_static {" /etc/nginx/sites-enabled/default; then
   :
 else
-  sudo sed -i "s+listen.*default_server;+&\n\tlocation /hbnb_static {\n\t\talias /data/web_static/current/;\n\t\tindex index.html;\n\t\terror_page 404 /404.html;\n\t}+" /etc/nginx/sites-enabled/default
+  sudo sed -i "s+listen.*default_server;+&\n\tlocation /hbnb_static {\n\t\talias /data/web_static/current/;\n\t\tautoindex off;\n\t}+" /etc/nginx/sites-enabled/default
 fi
 # verify nginx conf
 # Restart Nginx
