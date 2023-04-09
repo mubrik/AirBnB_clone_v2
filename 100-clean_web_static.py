@@ -80,7 +80,7 @@ def do_clean(number=0):
 
         for i in range(len(archives) - number):
             if archives[i].startswith("web_static_"):
-                run("rm -f {}".format(archives[i]))
+                run("rm -rf {}".format(archives[i]))
 
     local_arch = local("ls -1tr versions", capture=True).split("\n")
     for i in range(len(local_arch) - number):
@@ -96,8 +96,10 @@ def do_cleaan(number=0):
     if not number or number == 1:
         number = 1
 
-    archives = local("ls -1tr versions", capture=True).split("\n")
-    for i in range(len(archives) - number):
-        if archives[i].startswith("web_static_"):
-            print(archives[i])
-            local("rm -f ./versions/{}".format(archives[i]))
+    with cd("/data/web_static/releases"):
+        archives = run("ls -1tr").split("\n")
+        for i in range(len(archives) - number):
+            if archives[i].startswith("web_static_"):
+                print(archives[i])
+                """ run("rm -rf ./{}".format(archives[i]))
+                run("touch zzz{}".format(archives[i])) """
