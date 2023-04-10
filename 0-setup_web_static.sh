@@ -18,13 +18,8 @@ sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 # Set ownership of /data folder recursively to ubuntu
 sudo chown -R ubuntu:ubuntu /data/
 # change root html location
-sudo sed -i "s+root .*html;+root /var/www/html;+" /etc/nginx/sites-enabled/default
-# add location to nginx
-if grep -q "location /hbnb_static {" /etc/nginx/sites-enabled/default; then
-  :
-else
-  sudo sed -i "s+listen.*default_server;+&\n\tlocation /hbnb_static {\n\t\talias /data/web_static/current/;\n\t\tautoindex off;\n\t}+" /etc/nginx/sites-enabled/default
-fi
+sudo sed -i '0,/^\(\s*\)server_name\s*.*$/s//\1server_name rubbish rubbish;/' /etc/nginx/sites-enabled/default
+sudo sed -i '0,/^\(\s*\)server_name rubbish rubbish;$/s//&\n\n\1location \/hbnb_static {\n\1\1alias \/data\/web_static\/current\/;\n\1\1autoindex off;\n\1}/' /etc/nginx/sites-enabled/default
 # verify nginx conf
 # Restart Nginx
 sudo service nginx restart &>/dev/null
