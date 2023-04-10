@@ -16,12 +16,21 @@ echo "<html>
 # Create symbolic link
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 # Set ownership of /data folder recursively to ubuntu
-sudo chown -R ubuntu:ubuntu /data/
-# change root html location
-sudo sed -i '0,/^\(\s*\)server_name\s*.*$/s//\1server_name rubbish rubbish;/' /etc/nginx/sites-enabled/default
-sudo sed -i '0,/^\(\s*\)server_name rubbish rubbish;$/s//&\n\n\1location \/hbnb_static {\n\1\1alias \/data\/web_static\/current\/;\n\1\1autoindex off;\n\1}/' /etc/nginx/sites-enabled/default
+sudo chown -R "$USER":"$USER" /data/
+NGINX_CONFIG=\
+"
+server {
+ 	listen	80;
+  server_name rubbish rubbish;
+	location /hbnb_static/ {
+		alias /data/web_static/current/;
+		autoindex off;
+	}
+}
+"
+echo -e "$NGINX_CONFIG" > /etc/nginx/sites-enabled/default
 # verify nginx conf
 # Restart Nginx
 sudo service nginx restart &>/dev/null
 # test
-# echo $? && ls -l /data && ls -l /data/web_static && ls /data/web_static/current && echo "cating" && cat /data/web_static/current/index.html && echo "curling" && curl localhost/hbnb_static/index.html
+echo $? && ls -l /data && ls -l /data/web_static && ls /data/web_static/current && echo "cating" && cat /data/web_static/current/index.html && echo "curling" && curl localhost/hbnb_static/index.html
