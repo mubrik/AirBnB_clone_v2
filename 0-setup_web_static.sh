@@ -16,7 +16,7 @@ echo "<html>
 # Create symbolic link
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 # Set ownership of /data folder recursively to ubuntu
-sudo chown -R "$USER":"$USER" /data/
+sudo chown -R ubuntu:ubuntu /data/
 NGINX_CONFIG=\
 "
 server {
@@ -33,4 +33,4 @@ echo -e "$NGINX_CONFIG" > /etc/nginx/sites-enabled/default
 # Restart Nginx
 sudo service nginx restart &>/dev/null
 # test
-echo $? && ls -l /data && ls -l /data/web_static && ls /data/web_static/current && echo "cating" && cat /data/web_static/current/index.html && echo "curling" && curl localhost/hbnb_static/index.html
+# echo $? && ls -l /data && ls -l /data/web_static && ls /data/web_static/current && echo "cating" && cat /data/web_static/current/index.html && echo "curling" && curl localhost/hbnb_static/index.html
